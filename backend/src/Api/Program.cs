@@ -90,6 +90,12 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseCors(x =>
+    x.AllowAnyHeader()
+    .AllowAnyMethod()
+    .WithOrigins("http://localhost:3000")
+);
+
 app.MapControllers();
 app.MapGet("/api/test-auth", () => "You are authenticated!")
     .RequireAuthorization();
