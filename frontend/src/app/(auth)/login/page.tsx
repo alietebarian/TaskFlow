@@ -14,7 +14,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { useLogin } from "@/hooks/use-login";
+import { useLogin } from "@/features/auth/hooks/use-login";
 
 export default function LoginPage() {
     const { mutate, isPending } = useLogin();
