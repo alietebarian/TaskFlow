@@ -15,7 +15,6 @@ using Microsoft.OpenApi;
 using Persistence;
 using Serilog;
 using System.Text;
-using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +25,16 @@ builder.Host.UseSerilog((context, configuration) =>
 });
 
 builder.Services.AddControllers();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 {
@@ -99,6 +108,7 @@ builder.Services.AddValidatorsFromAssembly(typeof(RegisterCommand).Assembly);
 var app = builder.Build();
 
 app.UseExceptionHandler();
+app.UseCors("AllowFrontend");
 
 if (app.Environment.IsDevelopment())
 {
@@ -109,12 +119,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseCors(x =>
-    x.AllowAnyHeader()
-    .AllowAnyMethod()
-    .WithOrigins("http://localhost:3000")
-);
 
 app.MapControllers();
 app.MapGet("/api/test-auth", () => "You are authenticated!")
