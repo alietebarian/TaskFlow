@@ -3,6 +3,7 @@
 import { useAuthGuard } from "@/features/auth/hooks/use-auth-guard";
 import { CreateWorkspaceDialog } from "@/features/workspaces/components/create-workspace-dialog";
 import { useWorkspaces } from "@/features/workspaces/hooks/use-workspace";
+import Link from "next/link";
 
 export default function DashboardPage() {
   useAuthGuard();
@@ -35,15 +36,16 @@ export default function DashboardPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {workspaces?.map((workspace) => (
-            <div
+            <Link
               key={workspace.id}
+              href={`/dashboard/workspace/${workspace.id}`}
               className="rounded-lg border bg-white p-4 shadow-sm hover:shadow-md transition-shadow"
             >
               <h2 className="font-medium">{workspace.name}</h2>
               <p className="text-sm text-neutral-500">
                 Created {new Date(workspace.createdAt).toLocaleDateString()}
               </p>
-            </div>
+            </Link>
           ))}
         </div>
       )}
