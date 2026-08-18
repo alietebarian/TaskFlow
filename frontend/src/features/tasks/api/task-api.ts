@@ -1,0 +1,28 @@
+import { apiClient } from "@/lib/api-client";
+import { Task } from "../types/task";
+import { CreateTaskFormValues } from "../schemas/create-task-schema";
+
+const PRIORITY_MAP: Record<string, number> = {
+  Low: 0,
+  Medium: 1,
+  High: 2,
+  Urgent: 3,
+};
+
+export async function getTasks(projectId: string): Promise<Task[]> {
+  const response = await apiClient.get<Task[]>(`/project/${projectId}/tasks`);
+  return response.data;
+}
+
+export async function createTask(
+  projectId: string,
+  data: CreateTaskFormValues,
+): Promise<string> {
+  const response = await apiClient.post<string>(`/project/${projectId}/tasks`, {
+    title: data.title,
+    description: data.description,
+    priority: PRIORITY_MAP[data.priority],
+    dueDate: data.dueDate || null,
+  });
+  return response.data;
+}

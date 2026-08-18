@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useProjects } from "@/features/projects/hooks/use-projects";
 import { CreateProjectDialog } from "@/features/projects/components/create-project-dialog";
 import { useAuthGuard } from "@/features/auth/hooks/use-auth-guard";
+import Link from "next/link";
 
 export default function WorkspacePage() {
     useAuthGuard();
@@ -39,15 +40,16 @@ export default function WorkspacePage() {
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {projects?.map((project) => (
-                        <div
+                        <Link
                             key={project.id}
+                            href={`/dashboard/workspace/${workspaceId}/project/${project.id}`}
                             className="rounded-lg border bg-white p-4 shadow-sm hover:shadow-md transition-shadow"
                         >
                             <h2 className="font-medium">{project.name}</h2>
                             {project.description && (
                                 <p className="text-sm text-neutral-500 mt-1">{project.description}</p>
                             )}
-                        </div>
+                        </Link>
                     ))}
                 </div>
             )}
