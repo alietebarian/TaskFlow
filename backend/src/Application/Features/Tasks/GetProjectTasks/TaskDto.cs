@@ -9,4 +9,4 @@ public record TaskDto(
     DateTime? DueDate,
     Guid? AssignedToId,
     DateTime CreatedAt
-),
+);
