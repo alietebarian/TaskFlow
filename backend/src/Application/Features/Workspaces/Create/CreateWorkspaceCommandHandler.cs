@@ -21,7 +21,15 @@ public class CreateWorkspaceCommandHandler : IRequestHandler<CreateWorkspaceComm
             OwnerId = request.OwnerId,
         };
 
+        var workspaceMember = new WorkspaceMember
+        {
+            WorkspaceId = workspace.Id,
+            UserId = request.OwnerId,
+            Role = Domain.Enums.WorkspaceRole.Owner,
+        };
+
         _context.Workspaces.Add(workspace);
+        _context.WorkspaceMembers.Add(workspaceMember);
         await _context.SaveChangesAsync(cancellationToken);
 
         return workspace.Id;
