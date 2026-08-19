@@ -12,4 +12,5 @@ public class User : IdentityUser<Guid>
     public ICollection<Workspace> OwnedWorkspaces { get; set; } = new List<Workspace>();
     public ICollection<TaskItem> CreatedTasks { get; set; } = new List<TaskItem>();
     public ICollection<TaskItem> AssignedTasks { get; set; } = new List<TaskItem>();
+    public ICollection<WorkspaceMember> WorkspaceMembership { get; set; } = new List<WorkspaceMember>();
 }
