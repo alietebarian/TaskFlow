@@ -17,7 +17,7 @@ public class GetUserWorkspacesQueryHandler : IRequestHandler<GetUserWorkspacesQu
     {
         var workspaces = await _context.Workspaces
             .AsNoTracking()
-            .Where(x => x.OwnerId == request.UserId)
+            .Where(x => x.Members.Any(xx => xx.UserId == request.UserId))
             .Select(w => new WorkspaceDto(w.Id, w.Name, w.CreatedAt))
             .ToListAsync(cancellationToken);
 

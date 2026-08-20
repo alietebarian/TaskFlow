@@ -15,8 +15,11 @@ public class GetProjectTasksQueryHandler : IRequestHandler<GetProjectTasksQuery,
 
     public async Task<List<TaskDto>> Handle(GetProjectTasksQuery request, CancellationToken cancellationToken)
     {
+        //var isAuthorized = await _context.Projects
+        //    .AnyAsync(p => p.Id == request.ProjectId && p.Workspace.OwnerId == request.RequestingUserId, cancellationToken);
+
         var isAuthorized = await _context.Projects
-            .AnyAsync(p => p.Id == request.ProjectId && p.Workspace.OwnerId == request.RequestingUserId, cancellationToken);
+            .AnyAsync(x => x.Id == request.ProjectId && x.Workspace.Members.Any(xx => xx.UserId == request.RequestingUserId), cancellationToken);
 
         if (!isAuthorized) throw new Exception("Project not found or access denied.");
 

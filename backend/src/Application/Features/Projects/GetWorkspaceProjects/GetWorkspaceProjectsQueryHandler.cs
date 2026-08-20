@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Application.Common.Extensions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -15,10 +16,13 @@ public class GetWorkspaceProjectsQueryHandler : IRequestHandler<GetWorkspaceProj
 
     public async Task<List<ProjectDto>> Handle(GetWorkspaceProjectsQuery request, CancellationToken cancellationToken)
     {
-        var workspaceExists = await _context.Workspaces
-            .AnyAsync(x => x.Id == request.WorkspaceId && x.OwnerId == request.RequestingUserId, cancellationToken);
+        //var workspaceExists = await _context.Workspaces
+        //    .AnyAsync(x => x.Id == request.WorkspaceId && x.OwnerId == request.RequestingUserId, cancellationToken);
 
-        if (!workspaceExists) throw new Exception("Workspace not found or access denied.");
+        //if (!workspaceExists) throw new Exception("Workspace not found or access denied.");
+
+        var isMember = await _context.IsWorkspaceMemberAsync(request.WorkspaceId, request.RequestingUserId, cancellationToken);
+        if (!isMember) throw new Exception("Workspace not found or access denied.");
 
         var projects = await _context.Projects
             .AsNoTracking()

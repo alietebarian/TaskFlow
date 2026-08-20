@@ -15,8 +15,11 @@ public class UpdateTaskStatusCommandHandler : IRequestHandler<UpdateTaskStatusCo
 
     public async Task Handle(UpdateTaskStatusCommand request, CancellationToken cancellationToken)
     {
+        //var task = await _context.Tasks
+        //    .FirstOrDefaultAsync(x => x.Id == request.TaskId && x.Project.Workspace.OwnerId == request.RequestingUserId, cancellationToken);    
+
         var task = await _context.Tasks
-            .FirstOrDefaultAsync(x => x.Id == request.TaskId && x.Project.Workspace.OwnerId == request.RequestingUserId, cancellationToken);    
+            .FirstOrDefaultAsync(x => x.Id == request.TaskId && x.Project.Workspace.Members.Any(xx => xx.UserId == request.RequestingUserId), cancellationToken);
 
         if (task == null) throw new Exception("Task not found or access denied.");
 
