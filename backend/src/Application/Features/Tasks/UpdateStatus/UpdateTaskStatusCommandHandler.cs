@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Domain.Entities;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -23,7 +24,17 @@ public class UpdateTaskStatusCommandHandler : IRequestHandler<UpdateTaskStatusCo
 
         if (task == null) throw new Exception("Task not found or access denied.");
 
+        var oldStatus = task.Status;
         task.Status = request.NewStatus;
+        var activityLog = new ActivityLog
+        {
+            TaskId = request.TaskId,
+            UserId = request.RequestingUserId,
+            Action = Domain.Enums.ActivityAction.StatusChanged,
+            Details = $"Status changed from {oldStatus} to {request.NewStatus}",
+        };
+
+        _context.ActivityLogs.Add(activityLog);
         await _context.SaveChangesAsync(cancellationToken);
     }
 }

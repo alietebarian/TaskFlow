@@ -36,6 +36,16 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Guid>
         };
 
         _context.Tasks.Add(newTask);
+
+        var activityLog = new ActivityLog
+        {
+            TaskId = newTask.Id,
+            UserId = request.RequestingUserId,
+            Action = Domain.Enums.ActivityAction.TaskCreated,
+            Details = $"Task \"{newTask.Title}\" was created"
+        };
+
+        _context.ActivityLogs.Add(activityLog);
         await _context.SaveChangesAsync(cancellationToken);
 
         return newTask.Id;

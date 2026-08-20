@@ -18,7 +18,7 @@ public class GetTaskCommentsQueryHandler : IRequestHandler<GetTaskCommentsQuery,
         var isAuth = await _context.Tasks
             .AnyAsync(x => x.Id == request.TaskId && x.Project.Workspace.Members.Any(x => x.UserId == request.RequestingUserId), cancellationToken);
 
-        if (isAuth == null) throw new Exception("Task not found or access denied.");
+        if (!isAuth) throw new Exception("Task not found or access denied.");
 
         var comments = await _context.Comments
             .AsNoTracking()
