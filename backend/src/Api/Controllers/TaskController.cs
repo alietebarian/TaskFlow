@@ -28,11 +28,12 @@ public class TaskController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTasks(Guid projectId)
+    public async Task<IActionResult> GetTasks(Guid projectId, [FromQuery] GetProjectTasksQuery query)
     {
-        var query = new GetProjectTasksQuery(projectId, CurrentUserId);
-        var tasks = await _mediator.Send(query);
+        query.ProjectId = projectId;
+        query.RequestingUserId = CurrentUserId;
 
-        return Ok(tasks);
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
 }

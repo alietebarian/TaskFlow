@@ -16,9 +16,6 @@ public class GetProjectTasksQueryHandler : IRequestHandler<GetProjectTasksQuery,
 
     public async Task<PaginatedList<TaskDto>> Handle(GetProjectTasksQuery request, CancellationToken cancellationToken)
     {
-        //var isAuthorized = await _context.Projects
-        //    .AnyAsync(p => p.Id == request.ProjectId && p.Workspace.OwnerId == request.RequestingUserId, cancellationToken);
-
         var isAuthorized = await _context.Projects
             .AnyAsync(x => x.Id == request.ProjectId && x.Workspace.Members.Any(xx => xx.UserId == request.RequestingUserId), cancellationToken);
 
@@ -42,7 +39,7 @@ public class GetProjectTasksQueryHandler : IRequestHandler<GetProjectTasksQuery,
 
         var items = await query
             .OrderByDescending(x => x.CreatedAt)
-            .Skip((request.PageSize - 1) * request.PageSize)
+            .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
             .Select(t => new TaskDto(t.Id, t.Title, t.Description, t.Status.ToString(), t.Priority.ToString(), t.DueDate, t.AssignedToId, t.CreatedAt))
             .ToListAsync(cancellationToken);
