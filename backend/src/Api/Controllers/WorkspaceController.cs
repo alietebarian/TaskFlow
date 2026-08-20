@@ -1,4 +1,5 @@
-﻿using Application.Features.Workspaces.AddMember;
+﻿using Application.Features.Dashboard.GetWorkspaceStats;
+using Application.Features.Workspaces.AddMember;
 using Application.Features.Workspaces.Create;
 using Application.Features.Workspaces.GetUserWorkspaces;
 using MediatR;
@@ -42,5 +43,13 @@ public class WorkspaceController : BaseApiController
     {
         await _mediator.Send(new AddWorkspaceMemberCommand(workspaceId, request.Email, CurrentUserId));
         return Ok();
+    }
+
+    [HttpGet("{workspaceId}/stats")]
+    public async Task<IActionResult> GetStats(Guid workspaceId)
+    {
+        var query = new GetWorkspaceStatsQuery(workspaceId, CurrentUserId);
+        var stats = await _mediator.Send(query);
+        return Ok(stats);
     }
 }
