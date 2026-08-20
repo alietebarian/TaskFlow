@@ -22,4 +22,8 @@ public class TaskItem
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+
+    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+    public ICollection<ActivityLog> ActivityLogs { get; set; } = new List<ActivityLog>();
 }

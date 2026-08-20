@@ -16,6 +16,8 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
     public DbSet<Project> Projects { get; set; } = null!;
     public DbSet<TaskItem> Tasks { get; set; } = null!;
     public DbSet<WorkspaceMember> WorkspaceMembers { get; set; } = null!;
+    public DbSet<Comment> Comments { get; set; } = null!;
+    public DbSet<ActivityLog> ActivityLogs { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
