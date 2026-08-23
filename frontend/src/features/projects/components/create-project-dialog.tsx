@@ -9,7 +9,7 @@ import {
     CreateProjectFormValues,
 } from "../schemas/create-project-schema";
 import { useCreateProject } from "../hooks/use-create-project";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -48,11 +48,16 @@ export function CreateProjectDialog({ workspaceId }: { workspaceId: string }) {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+            {/* <DialogTrigger asChild>
                 <Button>
                     <Plus className="mr-2 h-4 w-4" />
                     New Project
                 </Button>
+            </DialogTrigger> */}
+
+            <DialogTrigger className={buttonVariants({ variant: "default" })}>
+                <Plus className="mr-2 h-4 w-4" />
+                New Project
             </DialogTrigger>
 
             <DialogContent>

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { useCreateWorkspace } from "../hooks/use-create-workspace";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
     Dialog,
@@ -44,11 +44,16 @@ export function CreateWorkspaceDialog() {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+            {/* <DialogTrigger asChild>
                 <Button>
                     <Plus className="mr-2 h-4 w-4" />
                     New Workspace
                 </Button>
+            </DialogTrigger> */}
+
+            <DialogTrigger className={buttonVariants({ variant: "default" })}>
+                <Plus className="mr-2 h-4 w-4" />
+                New Workspace
             </DialogTrigger>
 
             <DialogContent>

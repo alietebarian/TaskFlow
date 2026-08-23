@@ -9,8 +9,9 @@ import { Task, TaskStatus } from "../types/task";
 const STATUSES: TaskStatus[] = ["Todo", "InProgress", "Done"];
 
 export function KanbanBoard({ projectId }: { projectId: string }) {
-    const { data: tasks, isLoading, isError } = useTasks(projectId);
+    const { data, isLoading, isError } = useTasks(projectId);
     const { mutate: updateStatus } = useUpdateTaskStatus(projectId);
+    const tasks = data?.items
 
     const sensors = useSensors(
         useSensor(PointerSensor, {

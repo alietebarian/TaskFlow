@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { updateTaskStatus } from "../api/task-api";
-import { Task, TaskStatus } from "../types/task";
+import { PaginatedResponse, Task, TaskStatus } from "../types/task";
 
 export function useUpdateTaskStatus(projectId: string) {
   const queryClient = useQueryClient();
@@ -20,23 +20,30 @@ export function useUpdateTaskStatus(projectId: string) {
     onMutate: async ({ taskId, newStatus }) => {
       await queryClient.cancelQueries({ queryKey: ["tasks", projectId] });
 
-      const previousTasks = queryClient.getQueryData<Task[]>([
+      const previousData = queryClient.getQueryData<PaginatedResponse<Task>>([
         "tasks",
         projectId,
       ]);
 
-      queryClient.setQueryData<Task[]>(["tasks", projectId], (old) =>
-        old?.map((task) =>
-          task.id === taskId ? { ...task, status: newStatus } : task,
-        ),
+      queryClient.setQueryData<PaginatedResponse<Task>>(
+        ["tasks", projectId],
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            items: old.items.map((task) =>
+              task.id === taskId ? { ...task, status: newStatus } : task,
+            ),
+          };
+        },
       );
 
-      return { previousTasks };
+      return { previousData };
     },
 
     onError: (_err, _variables, context) => {
-      if (context?.previousTasks) {
-        queryClient.setQueryData(["tasks", projectId], context.previousTasks);
+      if (context?.previousData) {
+        queryClient.setQueryData(["tasks", projectId], context.previousData);
       }
       toast.error("Failed to update task status");
     },

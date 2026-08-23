@@ -9,7 +9,7 @@ import {
     CreateTaskFormValues,
 } from "../schemas/create-task-schema";
 import { useCreateTask } from "../hooks/use-create-task";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -60,11 +60,16 @@ export function CreateTaskDialog({ projectId }: { projectId: string }) {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+            {/* <DialogTrigger asChild>
                 <Button>
                     <Plus className="mr-2 h-4 w-4" />
                     New Task
                 </Button>
+            </DialogTrigger> */}
+
+            <DialogTrigger className={buttonVariants({ variant: "default" })}>
+                <Plus className="mr-2 h-4 w-4" />
+                New Task
             </DialogTrigger>
 
             <DialogContent>

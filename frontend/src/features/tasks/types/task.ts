@@ -11,3 +11,11 @@ export interface Task {
   assignedToId: string | null;
   createdAt: string;
 }
+
+export interface PaginatedResponse<T> {
+  items: T[];
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+}
