@@ -19,3 +19,9 @@ export interface PaginatedResponse<T> {
   totalCount: number;
   totalPages: number;
 }
+
+export interface TaskFilters {
+  search?: string;
+  status?: TaskStatus;
+  priority?: TaskPriority;
+}

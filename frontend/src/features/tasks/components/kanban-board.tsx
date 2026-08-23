@@ -4,23 +4,23 @@ import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from "
 import { useTasks } from "../hooks/use-tasks";
 import { useUpdateTaskStatus } from "../hooks/use-update-task-status";
 import { KanbanColumn } from "./kanban-column";
-import { Task, TaskStatus } from "../types/task";
+import { Task, TaskFilters, TaskStatus } from "../types/task";
+import { useState } from "react";
+import { TaskFiltersBar } from "./task-filters";
 
 const STATUSES: TaskStatus[] = ["Todo", "InProgress", "Done"];
 
 export function KanbanBoard({ projectId }: { projectId: string }) {
-    const { data, isLoading, isError } = useTasks(projectId);
+    const [filters, setFilters] = useState<TaskFilters>({});
+    const { data, isLoading, isError } = useTasks(projectId, filters);
     const { mutate: updateStatus } = useUpdateTaskStatus(projectId);
-    const tasks = data?.items
+    const tasks = data?.items;
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: { distance: 5 },
         })
     );
-
-    if (isLoading) return <div>Loading tasks...</div>;
-    if (isError) return <div className="text-red-600">Failed to load tasks.</div>;
 
     const tasksByStatus = (status: TaskStatus): Task[] =>
         tasks?.filter((task) => task.status === status) ?? [];
@@ -39,12 +39,22 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
     }
 
     return (
-        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-            <div className="flex gap-4 overflow-x-auto pb-4">
-                {STATUSES.map((status) => (
-                    <KanbanColumn key={status} status={status} tasks={tasksByStatus(status)} />
-                ))}
-            </div>
-        </DndContext>
+        <div>
+            <TaskFiltersBar filters={filters} onFiltersChange={setFilters} />
+
+            {isLoading ? (
+                <div>Loading tasks...</div>
+            ) : isError ? (
+                <div className="text-red-600">Failed to load tasks.</div>
+            ) : (
+                <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+                    <div className="flex gap-4 overflow-x-auto pb-4">
+                        {STATUSES.map((status) => (
+                            <KanbanColumn key={status} status={status} tasks={tasksByStatus(status)} />
+                        ))}
+                    </div>
+                </DndContext>
+            )}
+        </div>
     );
 }

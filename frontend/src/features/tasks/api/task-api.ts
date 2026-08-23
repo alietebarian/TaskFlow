@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/api-client";
-import { PaginatedResponse, Task } from "../types/task";
+import { PaginatedResponse, Task, TaskFilters } from "../types/task";
 import { CreateTaskFormValues } from "../schemas/create-task-schema";
 
 const PRIORITY_MAP: Record<string, number> = {
@@ -15,8 +15,20 @@ const STATUS_MAP: Record<string, number> = {
   Done: 2,
 };
 
-export async function getTasks(projectId: string): Promise<PaginatedResponse<Task>> {
-  const response = await apiClient.get<PaginatedResponse<Task>>(`/project/${projectId}/tasks`);
+export async function getTasks(projectId: string, filters?: TaskFilters): Promise<PaginatedResponse<Task>> {
+  const response = await apiClient.get<PaginatedResponse<Task>>(
+    `/project/${projectId}/tasks`,
+    {
+      params: {
+        pageSize: 50,
+        search: filters?.search || undefined,
+        status: filters?.status ? STATUS_MAP[filters.status] : undefined,
+        priority: filters?.priority
+          ? PRIORITY_MAP[filters.priority]
+          : undefined,
+      },
+    },
+  );
   return response.data;
 }
 
