@@ -2,6 +2,7 @@
 using Application.Features.Workspaces.AddMember;
 using Application.Features.Workspaces.Create;
 using Application.Features.Workspaces.GetUserWorkspaces;
+using Application.Features.Workspaces.GetWorkspaceMembers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -56,7 +57,7 @@ public class WorkspaceController : BaseApiController
     [HttpGet("{workspaceId}/members")]
     public async Task<IActionResult> GetMembers(Guid workspaceId)
     {
-        var query = new GetWorkspaceStatsQuery(workspaceId, CurrentUserId);
+        var query = new GetWorkspaceMembersQuery(workspaceId, CurrentUserId);
         var members = await _mediator.Send(query);
 
         return Ok(members);

@@ -6,6 +6,7 @@ import { CreateProjectDialog } from "@/features/projects/components/create-proje
 import { useAuthGuard } from "@/features/auth/hooks/use-auth-guard";
 import Link from "next/link";
 import { WorkspaceStatsCards } from "@/features/workspaces/components/workspace-stats-cards";
+import { MembersPanel } from "@/features/workspaces/components/members-panel";
 
 export default function WorkspacePage() {
     useAuthGuard();
@@ -34,6 +35,7 @@ export default function WorkspacePage() {
                 <CreateProjectDialog workspaceId={workspaceId} />
             </div>
             <WorkspaceStatsCards workspaceId={workspaceId} />
+            <MembersPanel workspaceId={workspaceId}/>
             {projects && projects.length === 0 ? (
                 <p className="text-neutral-500">
                     No projects yet. Create your first one to get started.
