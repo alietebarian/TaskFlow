@@ -52,4 +52,13 @@ public class WorkspaceController : BaseApiController
         var stats = await _mediator.Send(query);
         return Ok(stats);
     }
+
+    [HttpGet("{workspaceId}/members")]
+    public async Task<IActionResult> GetMembers(Guid workspaceId)
+    {
+        var query = new GetWorkspaceStatsQuery(workspaceId, CurrentUserId);
+        var members = await _mediator.Send(query);
+
+        return Ok(members);
+    }
 }
