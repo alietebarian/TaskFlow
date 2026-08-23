@@ -11,7 +11,13 @@ const COLUMN_TITLES: Record<TaskStatus, string> = {
     Done: "Done",
 };
 
-export function KanbanColumn({ status, tasks }: { status: TaskStatus; tasks: Task[] }) {
+interface KanbanColumnProps {
+    status: TaskStatus;
+    tasks: Task[];
+    onTaskClick: (task: Task) => void;
+}
+
+export function KanbanColumn({ status, tasks, onTaskClick }: KanbanColumnProps) {
     const { setNodeRef, isOver } = useDroppable({ id: status });
 
     return (
@@ -28,7 +34,7 @@ export function KanbanColumn({ status, tasks }: { status: TaskStatus; tasks: Tas
             <SortableContext items={tasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
                 <div className="space-y-2 min-h-15">
                     {tasks.map((task) => (
-                        <TaskCard key={task.id} task={task} />
+                        <TaskCard key={task.id} task={task} onClick={() => onTaskClick(task)} />
                     ))}
                 </div>
             </SortableContext>

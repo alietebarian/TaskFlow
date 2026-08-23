@@ -7,6 +7,7 @@ import { KanbanColumn } from "./kanban-column";
 import { Task, TaskFilters, TaskStatus } from "../types/task";
 import { useState } from "react";
 import { TaskFiltersBar } from "./task-filters";
+import { TaskDetailSheet } from "@/features/comments/components/task-detail-sheet";
 
 const STATUSES: TaskStatus[] = ["Todo", "InProgress", "Done"];
 
@@ -14,6 +15,7 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
     const [filters, setFilters] = useState<TaskFilters>({});
     const { data, isLoading, isError } = useTasks(projectId, filters);
     const { mutate: updateStatus } = useUpdateTaskStatus(projectId);
+    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
     const tasks = data?.items;
 
     const sensors = useSensors(
@@ -50,8 +52,13 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
                 <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
                     <div className="flex gap-4 overflow-x-auto pb-4">
                         {STATUSES.map((status) => (
-                            <KanbanColumn key={status} status={status} tasks={tasksByStatus(status)} />
+                            <KanbanColumn key={status} status={status} tasks={tasksByStatus(status)} onTaskClick={setSelectedTask} />
                         ))}
+                        <TaskDetailSheet
+                            task={selectedTask}
+                            open={!!selectedTask}
+                            onOpenChange={(open) => !open && setSelectedTask(null)}
+                        />
                     </div>
                 </DndContext>
             )}

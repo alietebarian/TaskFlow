@@ -11,7 +11,12 @@ const PRIORITY_COLORS: Record<string, string> = {
     Urgent: "bg-red-100 text-red-700",
 };
 
-export function TaskCard({ task }: { task: Task }) {
+interface TaskCardProps {
+    task: Task;
+    onClick: () => void;
+}
+
+export function TaskCard({ task, onClick }: TaskCardProps) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
         useSortable({ id: task.id });
 
@@ -27,6 +32,7 @@ export function TaskCard({ task }: { task: Task }) {
             style={style}
             {...attributes}
             {...listeners}
+            onClick={onClick}
             className="rounded-lg border bg-white p-3 shadow-sm cursor-grab active:cursor-grabbing"
         >
             <h3 className="text-sm font-medium">{task.title}</h3>
